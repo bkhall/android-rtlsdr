@@ -32,7 +32,6 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	 * static final char MESSAGEGO = 253; private static final char OVERWRITE =
 	 * 254; private static final char BADSAMPLE = 255;
 	 */
-	private final boolean DEBUG = false;
 	private final int MODES_DEFAULT_RATE = 2000000;
 	private final int MODES_DEFAULT_FREQ = 1090000000;
 	private final int MODES_AUTO_GAIN = -100; /* Use automatic gain. */
@@ -224,6 +223,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	private boolean tuner_set_bw = true;
 	private boolean tuner_init = false;
 	int erro_count = 0;
+
 	// AdsbParse adsb;
 	public SdrUSBDriver(UsbDevice device, UsbDeviceConnection connection) {
 		super(device, connection);
@@ -288,12 +288,12 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 				opened = true;
 
 			}
-			//if(myTuner == null)
-				myTuner = rtlsdr_detect();
+			// if(myTuner == null)
+			myTuner = rtlsdr_detect();
 			if (myTuner != null) {
-				
+
 				StartDevice();
-				
+
 			}
 		} finally {
 			if (!opened) {
@@ -306,33 +306,33 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	public void close() throws IOException {
 		rtlsdr_deinit_baseband();
 
-		if (myTuner != null)			myTuner.exit(0);
+		if (myTuner != null)
+			myTuner.exit(0);
 		mConnection.close();
 	}
 
 	@Override
 	public int read(byte[] dest, int timeoutMillis) throws IOException {
 		final int totalBytesRead;
-		
+
 		synchronized (mReadBufferLock) {
 			int readAmt = Math.min(dest.length, mReadBuffer.length);
 			totalBytesRead = mConnection.bulkTransfer(mReadEndpoint,
-					mReadBuffer, readAmt, timeoutMillis*1000);
+					mReadBuffer, readAmt, timeoutMillis * 1000);
 			// if (totalBytesRead < MODEM_STATUS_HEADER_LENGTH) {
 			// throw new IOException("Expected at least " +
 			// MODEM_STATUS_HEADER_LENGTH + " bytes");
 			// }
-			if(totalBytesRead < 0){
-				Log.e(TAG, " mConnection.bulkTransfer ERROR totalBytesRead=" + totalBytesRead  );
-				
-			}
-			else {
-				System.arraycopy(mReadBuffer, 0, dest, 0,totalBytesRead);
+			if (totalBytesRead < 0) {
+				Log.e(TAG, " mConnection.bulkTransfer ERROR totalBytesRead="
+						+ totalBytesRead);
+
+			} else {
+				System.arraycopy(mReadBuffer, 0, dest, 0, totalBytesRead);
 			}
 			return totalBytesRead;
 		}
-		
-		
+
 	}
 
 	@Override
@@ -395,18 +395,20 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 				buffer, length, timeout);
 	}
 
-	private static int rtlsdr_read_array(byte iicb2, char addr,
-			byte[] data, byte len) {
+	private static int rtlsdr_read_array(byte iicb2, char addr, byte[] data,
+			byte len) {
 		int r;
 		char index = (char) (iicb2 << 8);
 
 		r = libusb_control_transfer(CTRL_IN, (byte) 0, addr, index, data,
 				(char) len, USB_WRITE_TIMEOUT_MILLIS);
-		
-		
-		if (r < 0){
+
+		if (r < 0) {
 			Log.e("rtlsdr_read_array", " error" + len);
-			Log.e("rtlsdr_read_array", "addr 0x" + Integer.toHexString((int)addr) +" index 0x" + Integer.toHexString((int)index) + " array " + data[0] + " len " + len);
+			Log.e("rtlsdr_read_array",
+					"addr 0x" + Integer.toHexString((int) addr) + " index 0x"
+							+ Integer.toHexString((int) index) + " array "
+							+ data[0] + " len " + len);
 		}
 		return r;
 	}
@@ -418,9 +420,12 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 
 		r = libusb_control_transfer(CTRL_OUT, (byte) 0, addr, index, array,
 				(char) len, USB_WRITE_TIMEOUT_MILLIS);
-		
-		if (r < 0){
-			Log.e("rtlsdr_write_array", "addr 0x" + Integer.toHexString((int)addr) +" index 0x" + Integer.toHexString((int)index) + " array " + array[0] + " len " + len);
+
+		if (r < 0) {
+			Log.e("rtlsdr_write_array",
+					"addr 0x" + Integer.toHexString((int) addr) + " index 0x"
+							+ Integer.toHexString((int) index) + " array "
+							+ array[0] + " len " + len);
 			Log.e("rtlsdr_write_array", " error byte count " + len);
 		}
 		return r;
@@ -469,7 +474,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	}
 
 	private char rtlsdr_read_reg(byte block, char addr, byte len) {
-		int r=0;
+		int r = 0;
 		byte[] data = new byte[2];
 		char index = (char) (block << 8);
 		char reg;
@@ -486,7 +491,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	}
 
 	private int rtlsdr_write_reg(byte block, char addr, char val, byte len) {
-		int r=0;
+		int r = 0;
 		byte[] data = new byte[2];
 
 		char index = (char) ((block << 8) | 0x10);
@@ -501,9 +506,11 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		r = libusb_control_transfer(CTRL_OUT, (byte) 0, addr, index, data,
 				(char) len, USB_WRITE_TIMEOUT_MILLIS);
 
-		if (r < 0){
-			Log.e("rtlsdr_write_reg", "block " + block + " addr " + " val " + " len " + len);
-			Log.e("rtlsdr_write_reg","Line " + Thread.currentThread().getStackTrace()[2].getLineNumber());
+		if (r < 0) {
+			Log.e("rtlsdr_write_reg", "block " + block + " addr " + " val "
+					+ " len " + len);
+			Log.e("rtlsdr_write_reg", "Line "
+					+ Thread.currentThread().getStackTrace()[2].getLineNumber());
 		}
 		return r;
 	}
@@ -519,13 +526,18 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		r = libusb_control_transfer(CTRL_IN, (byte) 0, addr, index, data,
 				(char) len, USB_WRITE_TIMEOUT_MILLIS);
 
-		if (r < 0){
-			Log.e(TAG, "rtlsdr_demod_read_reg error "  + r);
-			Log.e(TAG, " addr " + Integer.toHexString((int)addr) + " index " + Integer.toHexString((int)index) + " data[0] " + Integer.toHexString((int)data[0]) +  " data[1] " + Integer.toHexString((int)data[1]) + " len " + Integer.toHexString((int)len));
+		if (r < 0) {
+			Log.e(TAG, "rtlsdr_demod_read_reg error " + r);
+			Log.e(TAG,
+					" addr " + Integer.toHexString((int) addr) + " index "
+							+ Integer.toHexString((int) index) + " data[0] "
+							+ Integer.toHexString((int) data[0]) + " data[1] "
+							+ Integer.toHexString((int) data[1]) + " len "
+							+ Integer.toHexString((int) len));
 		}
 		reg = (char) ((data[1] << 8) | data[0]);
 
-		return ((char)r);
+		return ((char) r);
 	}
 
 	private int rtlsdr_demod_write_reg(byte page, char addr, char val, byte len) {
@@ -544,9 +556,14 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		r = libusb_control_transfer(CTRL_OUT, (byte) 0, addr, index, data,
 				(char) len, USB_WRITE_TIMEOUT_MILLIS);
 
-		if (r < 0){
+		if (r < 0) {
 			Log.e(TAG, "rtlsdr_demod_write_reg failed " + r);
-			Log.e(TAG, " addr " + Integer.toHexString((int)addr) + " index " + Integer.toHexString((int)index) + " data[0] " + Integer.toHexString((int)data[0]) +  " data[1] " + Integer.toHexString((int)data[1]) + " len " + Integer.toHexString((int)len));
+			Log.e(TAG,
+					" addr " + Integer.toHexString((int) addr) + " index "
+							+ Integer.toHexString((int) index) + " data[0] "
+							+ Integer.toHexString((int) data[0]) + " data[1] "
+							+ Integer.toHexString((int) data[1]) + " len "
+							+ Integer.toHexString((int) len));
 		}
 		rtlsdr_demod_read_reg((byte) 0x0a, (char) 0x01, (byte) 1);
 
@@ -578,7 +595,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	}
 
 	private void rtlsdr_init_baseband() {
-		int i   = 0;
+		int i = 0;
 		int ret = 0;
 		/*
 		 * default FIR coefficients used for DAB/FM by the Windows driver, the
@@ -592,70 +609,77 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		ret = rtlsdr_write_reg(USBB, USB_SYSCTL, (char) 0x09, (byte) 1);
 		ret = rtlsdr_write_reg(USBB, USB_EPA_MAXPKT, (char) 0x0002, (byte) 2);
 		ret = rtlsdr_write_reg(USBB, USB_EPA_CTL, (char) 0x1002, (byte) 2);
-		
 
 		/* poweron demod */
 		ret = rtlsdr_write_reg(SYSB, DEMOD_CTL_1, (char) 0x22, (byte) 1);
 		ret = rtlsdr_write_reg(SYSB, DEMOD_CTL, (char) 0xe8, (byte) 1);
 
 		/* reset demod (bit 3, soft_rst) */
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x01, (char) 0x14, (byte) 1);
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x01, (char) 0x10, (byte) 1);
-
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x01, (char) 0x14,
+				(byte) 1);
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x01, (char) 0x10,
+				(byte) 1);
 
 		/* disable spectrum inversion and adjacent channel rejection */
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x15, (char) 0x00, (byte) 1);
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x16, (char) 0x0000, (byte) 2);
-	
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x15, (char) 0x00,
+				(byte) 1);
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x16, (char) 0x0000,
+				(byte) 2);
 
 		/* clear both DDC shift and IF frequency registers */
-		for (i = 0; i < 6; i++){
-			ret = rtlsdr_demod_write_reg((byte) 1, (char) (0x16 + i), (char) 0x00,(byte) 1);
+		for (i = 0; i < 6; i++) {
+			ret = rtlsdr_demod_write_reg((byte) 1, (char) (0x16 + i),
+					(char) 0x00, (byte) 1);
 		}
 
 		/* set FIR coefficients */
-		for (i = 0; i < fir_coeff.length; i++){
-			ret = rtlsdr_demod_write_reg((byte) 1, (char) (0x1c + i), fir_coeff[i],	(byte) 1);
+		for (i = 0; i < fir_coeff.length; i++) {
+			ret = rtlsdr_demod_write_reg((byte) 1, (char) (0x1c + i),
+					fir_coeff[i], (byte) 1);
 		}
 		/* enable SDR mode, disable DAGC (bit 5) */
-		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x19, (char) 0x05, (byte) 1);
+		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x19, (char) 0x05,
+				(byte) 1);
 
 		/* init FSM state-holding register */
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x93, (char) 0xf0, (byte) 1);
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x93, (char) 0xf0,
+				(byte) 1);
 
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x94, (char) 0x0f, (byte) 1);
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x94, (char) 0x0f,
+				(byte) 1);
 
 		/* disable AGC (en_dagc, bit 0) (this seems to have no effect) */
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x11, (char) 0x00, (byte) 1);
-
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x11, (char) 0x00,
+				(byte) 1);
 
 		/* disable RF and IF AGC loop */
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x04, (char) 0x00, (byte) 1);
-
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0x04, (char) 0x00,
+				(byte) 1);
 
 		/* disable PID filter (enable_PID = 0) */
-		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x61, (char) 0x60, (byte) 1);
-
+		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x61, (char) 0x60,
+				(byte) 1);
 
 		/* opt_adc_iq = 0, default ADC_I/ADC_Q datapath */
-		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x06, (char) 0x80, (byte) 1);
-
+		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x06, (char) 0x80,
+				(byte) 1);
 
 		/*
 		 * Enable Zero-IF mode (en_bbin bit), DC cancellation (en_dc_est), IQ
 		 * estimation/compensation (en_iq_comp, en_iq_est)
 		 */
-		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0xb1, (char) 0x1b, (byte) 1);
-
+		ret = rtlsdr_demod_write_reg((byte) 1, (char) 0xb1, (char) 0x1b,
+				(byte) 1);
 
 		/* disable 4.096 MHz clock output on pin TP_CK0 */
-		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x0d, (char) 0x83, (byte) 1);
+		ret = rtlsdr_demod_write_reg((byte) 0, (char) 0x0d, (char) 0x83,
+				(byte) 1);
 
 	}
 
 	private int rtlsdr_deinit_baseband() {
 		int r = 0;
-		int ret =0;
+		int ret = 0;
 
 		if ((tuner) && (!this.tuner_exit)) {
 			rtlsdr_set_i2c_repeater(true);
@@ -665,7 +689,9 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 
 		/* poweroff demodulator and ADCs */
 		ret = rtlsdr_write_reg(SYSB, DEMOD_CTL, (char) 0x20, (byte) 1);
-		if(ret != 0)Log.e(TAG," ret " + ret +  "Line " + Thread.currentThread().getStackTrace()[2].getLineNumber());
+		if (ret != 0)
+			Log.e(TAG, " ret " + ret + "Line "
+					+ Thread.currentThread().getStackTrace()[2].getLineNumber());
 		tuner_exit = true;
 		tuner = false;
 		return r;
@@ -1198,17 +1224,23 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	private RtlSdr_tuner_iface rtlsdr_detect() throws IOException {
 		int reg = 0;
 		int ret = 0;
-	    
-		if(myTuner != null){
+
+		if (myTuner != null) {
 			Log.e(TAG, "Error Already called rtlsdr_open()");
-		//	return (myTuner);
+			// return (myTuner);
 		}
 
 		Log.e(TAG, "rtlsdr_open()");
 
 		/* perform a dummy write, if it fails, reset the device */
 		if ((ret = rtlsdr_write_reg(USBB, USB_SYSCTL, (char) 0x09, (byte) 1)) < 0) {
-			if(ret != 0)Log.e(TAG,"ERROR ret " + ret +  " Line " + Thread.currentThread().getStackTrace()[2].getLineNumber());
+			if (ret != 0)
+				Log.e(TAG,
+						"ERROR ret "
+								+ ret
+								+ " Line "
+								+ Thread.currentThread().getStackTrace()[2]
+										.getLineNumber());
 			Log.e(TAG, "Resetting device...");
 
 		}
@@ -1217,7 +1249,6 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		/* Probe tuners */
 		rtlsdr_set_i2c_repeater(true);
 
-		
 		reg = rtlsdr_i2c_read_reg(R820T_I2C_ADDR, R820T_CHECK_ADDR) & 0x0000FF;
 		if (reg == R820T_CHECK_VAL) {
 			Log.e(TAG, "Found Rafael Micro R820T tuner\n");
@@ -1239,14 +1270,14 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 			rtlsdr_demod_write_reg((byte) 1, (char) 0x15, (char) 0x01, (byte) 1);
 
 			myTuner = new r820T_tuner();
-           if(myTuner != null)
-        	   Log.e(TAG,"Error on tuner init");
-        	   myTuner.init(0);
+			if (myTuner != null)
+				Log.e(TAG, "Error on tuner init");
+			myTuner.init(0);
 
 			rtlsdr_set_i2c_repeater(false);
 
 			tun_xtal = rtl_xtal; /* use the rtl clock value by default */
-			
+
 			return myTuner;
 		}
 
@@ -1346,8 +1377,9 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	private void rtlsdr_tuner_led_on() {
 		/* reset tuner before probing */
 		rtlsdr_set_gpio_bit((byte) 0, true);
-		//rtlsdr_set_gpio_bit((byte) 1, false);
+		// rtlsdr_set_gpio_bit((byte) 1, false);
 	}
+
 	private void rtlsdr_tuner_reset() {
 		/* reset tuner before probing */
 		rtlsdr_set_gpio_bit((byte) 5, true);
@@ -1388,50 +1420,40 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 
 	@Override
 	public boolean getCD() throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean getCTS() throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean getDSR() throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean getDTR() throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setDTR(boolean value) throws IOException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean getRI() throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean getRTS() throws IOException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void setRTS(boolean value) throws IOException {
-		// TODO Auto-generated method stub
-
 	}
 
 	public static int rtlsdr_i2c_write_fn(byte addr, byte[] buf, byte len) {

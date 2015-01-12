@@ -411,7 +411,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 			Log.d(TAG, "WritingBuffer[0] " + WritingBuffer[0] + ","
 					+ " WritingBuffer[1] " + WritingBuffer[1] + " i= " + i);
 			while (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR,
-					WritingBuffer,  (byte) (WritingByteNum + 1)) < 0) {
+					WritingBuffer, (byte) (WritingByteNum + 1)) < 0) {
 				Log.d(TAG, "WritingBuffer[0] " + WritingBuffer[0] + ","
 						+ " WritingBuffer[1] " + WritingBuffer[1] + " i= " + i
 						+ " FAILED!!!");
@@ -435,7 +435,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 
 		// Get regiser start address, writing bytes, and byte number.
 		// RegStartAddr = 0x00;
-		ByteNum =  I2C_Info.Len;
+		ByteNum = I2C_Info.Len;
 
 		// Set tuner register reading address.
 		// Note: The I2C format of tuner register reading address setting is as
@@ -445,7 +445,8 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 		// &RegStartAddr, LEN_1_BYTE) != FUNCTION_SUCCESS)
 		// goto error_status_set_tuner_register_reading_address;
 
-		if (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, RegStartAddr, (byte) 1) < 0)
+		if (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, RegStartAddr,
+				(byte) 1) < 0)
 			return false;
 
 		// Get tuner register bytes.
@@ -489,7 +490,8 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 		// printf("called %s: %02x -> %02x\n", __FUNCTION__, WritingBuffer[0],
 		// WritingBuffer[1]);
 
-		if (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, WritingBuffer,	 (byte) 2) < 0)
+		if (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, WritingBuffer,
+				(byte) 2) < 0)
 			return false;
 
 		return true;
@@ -846,7 +848,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 	}
 
 	SysFreq_Info_Type R828_SysFreq_Sel(
-			/* R828_Standard_Type */int R828_Standard, int RF_freq) {
+	/* R828_Standard_Type */int R828_Standard, int RF_freq) {
 		SysFreq_Info_Type R828_SysFreq_Info = new SysFreq_Info_Type();
 
 		switch (R828_Standard) {

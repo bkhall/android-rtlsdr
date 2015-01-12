@@ -2,7 +2,7 @@ package com.rtlsdr.android.tuner;
 
 import java.io.IOException;
 
-public class fc2580_tuner implements RtlSdr_tuner_iface{
+public class fc2580_tuner implements RtlSdr_tuner_iface {
 
 	@Override
 	public int init(int param) throws IOException {

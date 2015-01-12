@@ -4,6 +4,7 @@ import java.io.IOException;
 
 public class fc0012_tuner implements RtlSdr_tuner_iface {
 	private static final String TAG = fc0012_tuner.class.getSimpleName();
+
 	@Override
 	public int init(int param) throws IOException {
 		// TODO Auto-generated method stub
