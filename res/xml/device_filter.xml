@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- 0x0403 / 0x6001: FTDI FT232R UART -->
+    <usb-device product-id="24577" vendor-id="1027" />
+
+    <!-- 0x0403 / 0x6015: FTDI FT231X -->
+    <usb-device product-id="24597" vendor-id="1027" />
+
+    <!-- 0x2341 / Arduino -->
+    <usb-device vendor-id="9025" />
+
+    <!-- 0x16C0 / 0x0483: Teensyduino -->
+    <usb-device product-id="1155" vendor-id="5824" />
+
+    <!-- 0x10C4 / 0xEA60: CP210x UART Bridge -->
+    <usb-device product-id="60000" vendor-id="4292" />
+
+    <!-- 0x067B / 0x2303: Prolific PL2303 -->
+    <usb-device product-id="8963" vendor-id="1659" />
+    
+    <!-- RTLSDR devices, mostly DVB-TV dongles -->
+    <usb-device product-id="10290" vendor-id="3034" />
+    <usb-device product-id="10296" vendor-id="3034" />
+    <usb-device product-id="169" vendor-id="3277" />
+    <usb-device product-id="179" vendor-id="3277" />
+    <usb-device product-id="180" vendor-id="3277" />
+    <usb-device product-id="183" vendor-id="3277" />
+    <usb-device product-id="198" vendor-id="3277" />
+    <usb-device product-id="211" vendor-id="3277" />
+    <usb-device product-id="215" vendor-id="3277" />
+    <usb-device product-id="224" vendor-id="3277" />
+    <usb-device product-id="1568" vendor-id="6235" />
+    <usb-device product-id="1616" vendor-id="6235" />
+    <usb-device product-id="1664" vendor-id="6235" />
+    <usb-device product-id="47107" vendor-id="8013" />
+    <usb-device product-id="51203" vendor-id="8013" />
+    <usb-device product-id="53894" vendor-id="8013" />
+    <usb-device product-id="55299" vendor-id="8013" />
+    <usb-device product-id="54168" vendor-id="7040" />
+    <usb-device product-id="54180" vendor-id="7040" />
+    <usb-device product-id="4353" vendor-id="7449" />
+    <usb-device product-id="4354" vendor-id="7449" />
+    <usb-device product-id="4355" vendor-id="7449" />
+    <usb-device product-id="28799" vendor-id="1112" />
+    <usb-device product-id="54163" vendor-id="7040" />
+    <usb-device product-id="54164" vendor-id="7040" />
+    <usb-device product-id="54165" vendor-id="7040" />
+    <usb-device product-id="54173" vendor-id="7040" />
+
+</resources>
