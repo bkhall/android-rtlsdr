@@ -1,8 +1,8 @@
-package com.rtlsdr.android.tuner;
+package com.rtlsdr.android.tuners;
 
 import java.io.IOException;
 
-public interface RtlSdr_tuner_iface {
+public interface IRtlSdrTuner {
 	int init(int param) throws IOException;
 
 	int exit(int param) throws IOException;

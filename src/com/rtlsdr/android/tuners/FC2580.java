@@ -1,8 +1,8 @@
-package com.rtlsdr.android.tuner;
+package com.rtlsdr.android.tuners;
 
 import java.io.IOException;
 
-public class fc2580_tuner implements RtlSdr_tuner_iface {
+public class FC2580 implements IRtlSdrTuner {
 
 	@Override
 	public int init(int param) throws IOException {

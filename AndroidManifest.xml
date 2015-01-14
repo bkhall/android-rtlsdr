@@ -10,4 +10,6 @@
 
     <uses-sdk android:minSdkVersion="15" />
 
+    <application />
+
 </manifest>

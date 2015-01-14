@@ -1,9 +1,9 @@
-package com.rtlsdr.android.tuner;
+package com.rtlsdr.android.tuners;
 
 import java.io.IOException;
 
-public class fc0012_tuner implements RtlSdr_tuner_iface {
-	private static final String TAG = fc0012_tuner.class.getSimpleName();
+public class FC0012 implements IRtlSdrTuner {
+	private static final String TAG = FC0012.class.getSimpleName();
 
 	@Override
 	public int init(int param) throws IOException {

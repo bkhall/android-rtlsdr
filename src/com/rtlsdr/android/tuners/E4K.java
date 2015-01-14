@@ -1,10 +1,10 @@
-package com.rtlsdr.android.tuner;
+package com.rtlsdr.android.tuners;
 
 import java.io.IOException;
 
-import com.rtlsdr.android.SdrUSBDriver;
+import com.rtlsdr.android.SdrSerialDriver;
 
-public class e4k_tuner implements RtlSdr_tuner_iface {
+public class E4K implements IRtlSdrTuner {
 	class e4k_if_filter {
 		int E4K_IF_FILTER_MIX;
 		int E4K_IF_FILTER_CHAN;
@@ -219,11 +219,11 @@ public class e4k_tuner implements RtlSdr_tuner_iface {
 	}
 
 	byte e4k_reg_read(int reg) {
-		return SdrUSBDriver.rtlsdr_i2c_read_reg((char) E4K_I2C_ADDR, reg);
+		return SdrSerialDriver.rtlsdr_i2c_read_reg((char) E4K_I2C_ADDR, reg);
 	}
 
 	int e4k_reg_write(int reg, int val) {
-		return SdrUSBDriver.rtlsdr_i2c_write_reg((byte) E4K_I2C_ADDR,
+		return SdrSerialDriver.rtlsdr_i2c_write_reg((byte) E4K_I2C_ADDR,
 				(char) reg, (char) val);
 	}
 

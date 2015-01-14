@@ -14,16 +14,16 @@ import android.util.Log;
 
 import com.hoho.android.usbserial.driver.CommonUsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbId;
-import com.rtlsdr.android.tuner.RtlSdr_tuner_iface;
-import com.rtlsdr.android.tuner.e4k_tuner;
-import com.rtlsdr.android.tuner.fc0012_tuner;
-import com.rtlsdr.android.tuner.fc0013_tuner;
-import com.rtlsdr.android.tuner.fc2580_tuner;
-import com.rtlsdr.android.tuner.r820T_tuner;
+import com.rtlsdr.android.tuners.E4K;
+import com.rtlsdr.android.tuners.FC0012;
+import com.rtlsdr.android.tuners.FC0013;
+import com.rtlsdr.android.tuners.FC2580;
+import com.rtlsdr.android.tuners.IRtlSdrTuner;
+import com.rtlsdr.android.tuners.R820T;
 
-public class SdrUSBDriver extends CommonUsbSerialDriver {
-	private static final String TAG = SdrUSBDriver.class.getSimpleName();
-	static RtlSdr_tuner_iface myTuner = null;
+public class SdrSerialDriverOrig extends CommonUsbSerialDriver {
+	private static final String TAG = SdrSerialDriverOrig.class.getSimpleName();
+	static IRtlSdrTuner myTuner = null;
 	boolean set_gain_mode = true;
 	/*
 	 * private static final int DEFAULT_BAUD_RATE = 9600;
@@ -225,7 +225,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 	int erro_count = 0;
 
 	// AdsbParse adsb;
-	public SdrUSBDriver(UsbDevice device, UsbDeviceConnection connection) {
+	public SdrSerialDriverOrig(UsbDevice device, UsbDeviceConnection connection) {
 		super(device, connection);
 	}
 
@@ -379,13 +379,31 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 
 	public static Map<Integer, int[]> getSupportedDevices() {
 		final Map<Integer, int[]> supportedDevices = new LinkedHashMap<Integer, int[]>();
-		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_RTL), new int[] {
-				UsbId.RTL_RTL2838, UsbId.RTL_RTL2832, });
+		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SDR), new int[] {
+				UsbId.SDR_SDR2838, UsbId.SDR_SDR2832 });
 		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_TERRACTEC),
 				new int[] { UsbId.TER_00A9, UsbId.TER_00B3, UsbId.TER_00B4,
 						UsbId.TER_00B5, UsbId.TER_00B7, UsbId.TER_00B8,
 						UsbId.TER_00B9, UsbId.TER_00C0, UsbId.TER_00C6,
-						UsbId.TER_00D3, UsbId.TER_00D7, UsbId.TER_00E0, });
+						UsbId.TER_00D3, UsbId.TER_00D7, UsbId.TER_00E0 });
+		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SDR2), new int[] {
+				UsbId.SDR2_SDR169, UsbId.SDR2_SDR179, UsbId.SDR2_SDR180,
+				UsbId.SDR2_SDR183, UsbId.SDR2_SDR198, UsbId.SDR2_SDR211,
+				UsbId.SDR2_SDR215, UsbId.SDR2_SDR224 });
+		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SDR3), new int[] {
+				UsbId.SDR3_SDR1568, UsbId.SDR3_SDR1616, UsbId.SDR3_SDR1664 });
+		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SDR4), new int[] {
+				UsbId.SDR4_SDR47107, UsbId.SDR4_SDR51203, UsbId.SDR4_SDR53894,
+				UsbId.SDR4_SDR55299 });
+		supportedDevices
+				.put(Integer.valueOf(UsbId.VENDOR_SDR5), new int[] {
+						UsbId.SDR5_SDR54163, UsbId.SDR5_SDR54164,
+						UsbId.SDR5_SDR54165, UsbId.SDR5_SDR54168,
+						UsbId.SDR5_SDR54173, UsbId.SDR5_SDR54180 });
+		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SDR6),
+				new int[] { UsbId.SDR6_SDR28799 });
+		supportedDevices.put(Integer.valueOf(UsbId.VENDOR_SDR7), new int[] {
+				UsbId.SDR7_SDR4353, UsbId.SDR7_SDR4354, UsbId.SDR7_SDR4355 });
 		return supportedDevices;
 	}
 
@@ -1221,7 +1239,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		return (this.offs_freq < 0) ? 1 : 0;
 	}
 
-	private RtlSdr_tuner_iface rtlsdr_detect() throws IOException {
+	private IRtlSdrTuner rtlsdr_detect() throws IOException {
 		int reg = 0;
 		int ret = 0;
 
@@ -1269,7 +1287,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 			/* enable spectrum inversion */
 			rtlsdr_demod_write_reg((byte) 1, (char) 0x15, (char) 0x01, (byte) 1);
 
-			myTuner = new r820T_tuner();
+			myTuner = new R820T();
 			if (myTuner != null)
 				Log.e(TAG, "Error on tuner init");
 			myTuner.init(0);
@@ -1285,7 +1303,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		if (reg == R820T_CHECK_VAL) {
 			Log.e(TAG, "Found Rafael Micro R828D tuner\n");
 			this.tuner_type = RTLSDR_TUNER_R828D;
-			myTuner = new r820T_tuner();// ??
+			myTuner = new R820T();// ??
 
 			myTuner.init(0);
 			rtlsdr_set_i2c_repeater(false);
@@ -1296,7 +1314,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		if (reg == E4K_CHECK_VAL) {
 			Log.e(TAG, "Found Elonics E4000 tuner");
 			this.tuner_type = RTLSDR_TUNER_E4000;
-			myTuner = new e4k_tuner();
+			myTuner = new E4K();
 
 			myTuner.init(0);
 
@@ -1315,7 +1333,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 
 			tun_xtal = rtl_xtal; /* use the rtl clock value by default */
 
-			myTuner = new fc0013_tuner();
+			myTuner = new FC0013();
 
 			myTuner.init(0);
 
@@ -1333,7 +1351,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 		if ((reg & 0x7f) == FC2580_CHECK_VAL) {
 			Log.e(TAG, "Found FCI 2580 tuner");
 			this.tuner_type = RTLSDR_TUNER_FC2580;
-			myTuner = new fc2580_tuner();
+			myTuner = new FC2580();
 
 			myTuner.init(0);
 
@@ -1350,7 +1368,7 @@ public class SdrUSBDriver extends CommonUsbSerialDriver {
 			rtlsdr_set_gpio_output((byte) 6);
 			this.tuner_type = RTLSDR_TUNER_FC0012;
 
-			myTuner = new fc0012_tuner();
+			myTuner = new FC0012();
 
 			myTuner.init(0);
 

@@ -1,3 +1,24 @@
+/* Copyright 2011-2013 Google Inc.
+ * Copyright 2013 mike wakerly <opensource@hoho.com>
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+ * USA.
+ *
+ * Project home page: https://github.com/mik3y/usb-serial-for-android
+ */
+
 package com.hoho.android.usbserial.driver;
 
 /**
@@ -12,33 +33,7 @@ public final class UsbId {
 
 	public static final int VENDOR_FTDI = 0x0403;
 	public static final int FTDI_FT232R = 0x6001;
-
-	public static final int FTDI_FT4232H = 0x6011;
-	public static final int FTDI_FT232H = 0x6014;
-	public static final int FTDI_FT232C = 0x6010;// ??
-
-	// ///////////////////////////////////////// add vendor and devices ID here
-	public static final int VENDOR_TERRACTEC = 0x0CCD;
-	public static final int TER_00A9 = 0x00a9; // Terratec Cinergy T Stick Black
-												// (rev 1)"
-	public static final int TER_00B3 = 0x00B3; // Terratec NOXON DAB/DAB+ USB
-												// dongle (rev 1)"
-	public static final int TER_00B4 = 0x00B4; // Terratec Deutschlandradio DAB
-												// Stick""
-	public static final int TER_00B5 = 0x00B5; // "Terratec NOXON DAB Stick - Radio Energy"
-	public static final int TER_00B7 = 0x00B7;
-	public static final int TER_00B8 = 0x00B8;
-	public static final int TER_00B9 = 0x00B9;
-	public static final int TER_00C0 = 0x00C0;
-	public static final int TER_00C6 = 0x00C6;
-	public static final int TER_00D3 = 0x00d3;
-	public static final int TER_00D7 = 0x00d7;
-	public static final int TER_00E0 = 0x00e0;
-
-	// /////////////////////////////////////////////////////////
-	public static final int VENDOR_RTL = 0x0bda;
-	public static final int RTL_RTL2838 = 0x2838;
-	public static final int RTL_RTL2832 = 0x2832;
+	public static final int FTDI_FT231X = 0x6015;
 
 	public static final int VENDOR_ATMEL = 0x03EB;
 	public static final int ATMEL_LUFA_CDC_DEMO_APP = 0x2044;
@@ -60,8 +55,14 @@ public final class UsbId {
 	public static final int VENDOR_LEAFLABS = 0x1eaf;
 	public static final int LEAFLABS_MAPLE = 0x0004;
 
-	public static final int VENDOR_SILAB = 0x10c4;
-	public static final int SILAB_CP2102 = 0xea60;
+	public static final int VENDOR_SILABS = 0x10c4;
+	public static final int SILABS_CP2102 = 0xea60;
+	public static final int SILABS_CP2105 = 0xea70;
+	public static final int SILABS_CP2108 = 0xea71;
+	public static final int SILABS_CP2110 = 0xea80;
+
+	public static final int VENDOR_PROLIFIC = 0x067b;
+	public static final int PROLIFIC_PL2303 = 0x2303;
 
 	private UsbId() {
 		throw new IllegalAccessError("Non-instantiable class.");

@@ -1,13 +1,13 @@
-package com.rtlsdr.android.tuner;
+package com.rtlsdr.android.tuners;
 
 import java.io.IOException;
 
 import android.util.Log;
 
-import com.rtlsdr.android.SdrUSBDriver;
+import com.rtlsdr.android.SdrSerialDriver;
 
-public class r820T_tuner implements RtlSdr_tuner_iface {
-	private static final String TAG = r820T_tuner.class.getSimpleName();
+public class R820T implements IRtlSdrTuner {
+	private static final String TAG = R820T.class.getSimpleName();
 	public static final byte R820T_I2C_ADDR = 0x34;
 	public static final int R820T_CHECK_ADDR = 0x00;
 	public static final int R820T_CHECK_VAL = 0x69;
@@ -410,7 +410,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 			// goto error_status_set_tuner_registers;
 			Log.d(TAG, "WritingBuffer[0] " + WritingBuffer[0] + ","
 					+ " WritingBuffer[1] " + WritingBuffer[1] + " i= " + i);
-			while (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR,
+			while (SdrSerialDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR,
 					WritingBuffer, (byte) (WritingByteNum + 1)) < 0) {
 				Log.d(TAG, "WritingBuffer[0] " + WritingBuffer[0] + ","
 						+ " WritingBuffer[1] " + WritingBuffer[1] + " i= " + i
@@ -445,7 +445,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 		// &RegStartAddr, LEN_1_BYTE) != FUNCTION_SUCCESS)
 		// goto error_status_set_tuner_register_reading_address;
 
-		if (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, RegStartAddr,
+		if (SdrSerialDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, RegStartAddr,
 				(byte) 1) < 0)
 			return false;
 
@@ -457,7 +457,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 		// ReadingBytes, ByteNum) != FUNCTION_SUCCESS)
 		// goto error_status_get_tuner_registers;
 
-		if (SdrUSBDriver.rtlsdr_i2c_read_fn(R820T_I2C_ADDR, ReadingBytes,
+		if (SdrSerialDriver.rtlsdr_i2c_read_fn(R820T_I2C_ADDR, ReadingBytes,
 				ByteNum) < 0)
 			return false;
 
@@ -490,7 +490,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 		// printf("called %s: %02x -> %02x\n", __FUNCTION__, WritingBuffer[0],
 		// WritingBuffer[1]);
 
-		if (SdrUSBDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, WritingBuffer,
+		if (SdrSerialDriver.rtlsdr_i2c_write_fn(R820T_I2C_ADDR, WritingBuffer,
 				(byte) 2) < 0)
 			return false;
 
@@ -1511,7 +1511,7 @@ public class r820T_tuner implements RtlSdr_tuner_iface {
 		 */
 		// FIXME hack
 		R828_Arry[11] &= 0xEF;
-		PLL_Ref = SdrUSBDriver.rtlsdr_get_tuner_clock();
+		PLL_Ref = SdrSerialDriver.rtlsdr_get_tuner_clock();
 
 		R828_I2C.RegAddr = 0x10;
 		R828_I2C.Data = R828_Arry[11];

@@ -1,13 +1,13 @@
-package com.rtlsdr.android.tuner;
+package com.rtlsdr.android.tuners;
 
 import java.io.IOException;
 
 import android.util.Log;
 
-import com.rtlsdr.android.SdrUSBDriver;
+import com.rtlsdr.android.SdrSerialDriver;
 
-public class fc0013_tuner implements RtlSdr_tuner_iface {
-	private static final String TAG = fc0013_tuner.class.getSimpleName();
+public class FC0013 implements IRtlSdrTuner {
+	private static final String TAG = FC0013.class.getSimpleName();
 	final int FC0013_I2C_ADDR = 0xc6;
 	final int FC0013_CHECK_ADDR = 0x00;
 	final int FC0013_CHECK_VAL = 0xa3;
@@ -62,7 +62,7 @@ public class fc0013_tuner implements RtlSdr_tuner_iface {
 		data[0] = reg;
 		data[1] = val;
 
-		if (SdrUSBDriver.rtlsdr_i2c_write_fn((byte) FC0013_I2C_ADDR, data,
+		if (SdrSerialDriver.rtlsdr_i2c_write_fn((byte) FC0013_I2C_ADDR, data,
 				(byte) 2) < 0)
 			return -1;
 
@@ -73,11 +73,11 @@ public class fc0013_tuner implements RtlSdr_tuner_iface {
 		byte[] data = new byte[2];
 		data[0] = reg;
 
-		if (SdrUSBDriver.rtlsdr_i2c_write_fn((byte) FC0013_I2C_ADDR, data,
+		if (SdrSerialDriver.rtlsdr_i2c_write_fn((byte) FC0013_I2C_ADDR, data,
 				(byte) 1) < 0)
 			return -1;
 
-		if (SdrUSBDriver.rtlsdr_i2c_read_fn((byte) FC0013_I2C_ADDR, data,
+		if (SdrSerialDriver.rtlsdr_i2c_read_fn((byte) FC0013_I2C_ADDR, data,
 				(byte) 1) < 0)
 			return -1;
 
@@ -190,7 +190,7 @@ public class fc0013_tuner implements RtlSdr_tuner_iface {
 		boolean vco_select = false;
 		byte[] tmp = new byte[1];
 
-		xtal_freq_div_2 = SdrUSBDriver.rtlsdr_get_tuner_clock() / 2;
+		xtal_freq_div_2 = SdrSerialDriver.rtlsdr_get_tuner_clock() / 2;
 
 		/* set VHF track */
 		ret = fc0013_set_vhf_track(freq);
